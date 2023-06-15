@@ -22,7 +22,7 @@ void Pokedex::read_dataset() {
         while (!inFS.eof()) {
             std::string line;
             getline(inFS, line, '\n');
-            this->line_string(line);
+            this->line_cleaning(line);
             Pokemon newPokemon;
 
             /** Pokedex ID **/
@@ -87,11 +87,19 @@ void Pokedex::read_dataset() {
             this->get_ability(line, primAbility, primDescript);
             abilities.push_back(primAbility);
 
+            if (!this->abilityMap.count(primAbility)) {
+                this->abilityMap.insert({primAbility, primDescript});
+            }
+
             /** Secondary Ability and Description **/
             std::string secAbility;
             std::string secDescript;
             this->get_ability(line, secAbility, secDescript);
             abilities.push_back(secAbility);
+
+            if (!this->abilityMap.count(secAbility) && secAbility != "NULL") {
+                this->abilityMap.insert({secAbility, secDescript});
+            }
 
             /** Hidden Ability and Description **/
             std::string hidAbility;
@@ -99,11 +107,19 @@ void Pokedex::read_dataset() {
             this->get_ability(line, hidAbility, hidDescript);
             abilities.push_back(hidAbility);
 
+            if (!this->abilityMap.count(hidAbility) && hidAbility != "NULL") {
+                this->abilityMap.insert({hidAbility, hidDescript});
+            }
+
             /** Special Event Ability and Description **/
             std::string specAbility;
             std::string specDescript;
             this->get_ability(line, specAbility, specDescript);
             abilities.push_back(specAbility);
+
+            if (!this->abilityMap.count(specAbility) && specAbility != "NULL") {
+                this->abilityMap.insert({specAbility, specDescript});
+            }
 
             newPokemon.set_abilities(abilities);
 
@@ -186,23 +202,27 @@ void Pokedex::read_dataset() {
         std::cout << "File is not open!" << std::endl;
     }
 
-    std::cout << this->pokemonList.size() << std::endl;
+    inFS.close();
 }
 
 void Pokedex::string_cleaning(std::string& str) {
+    // iterate through string str
     for (int i = 0; i < str.size(); i++) {
+        // check for slash or double quote char
         if (str[i] == '\"' || str[i] == '\\') {
             str.erase(str.begin() + i);
         }
     }
 }
 
-void Pokedex::line_string(std::string& line) {
+void Pokedex::line_cleaning(std::string& str) {
     int counter = 0;
 
-    for (int i = 0; i < line.size(); i++) {
-        if (line[i] == '\"'  && counter < 2) {
-            line.erase(line.begin() + i);
+    // check for double quote char
+    for (int i = 0; i < str.size(); i++) {
+        // only delete first 2 double quotes
+        if (str[i] == '\"' && counter < 2) {
+            str.erase(str.begin() + i);
             counter++;
         }
 
@@ -219,6 +239,7 @@ void Pokedex::get_info(std::string& line, std::string& str) {
 }
 
 void Pokedex::get_ability(std::string& line, std::string& ability, std::string& description) {
+    // check if Pokemon ability is null
     if (line.substr(0,4) != "NULL") {
         line.erase(0,1);
         ability = line.substr(0, line.find('\"'));
