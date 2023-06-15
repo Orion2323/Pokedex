@@ -20,130 +20,173 @@ void Pokedex::read_dataset() {
         getline(inFS, headers, '\n');
 
         while (!inFS.eof()) {
-            std::string ID;
-            getline(inFS, ID, ',');
+            std::string line;
+            getline(inFS, line, '\n');
+            this->line_string(line);
+            Pokemon newPokemon;
 
-            std::string num;
-            getline(inFS, num, ',');
+            /** Pokedex ID **/
+            std::string ID = line.substr(0, line.find(','));
+            line.erase(0, ID.size() + 1);
 
+            /** Pokedex Number **/
+            std::string num = line.substr(0, line.find(','));
+            line.erase(0, num.size() + 1);
+
+            /** Name **/
             std::string name;
-            getline(inFS, name, ',');
-            this->string_cleaning(name);
+            this->get_info(line, name);
+            newPokemon.set_name(name);
 
+            /** Classification **/
             std::string classification;
-            getline(inFS, classification, ',');
-            this->string_cleaning(classification);
+            this->get_info(line, classification);
+            newPokemon.set_classification(classification);
 
+            /** Alternative Form **/
             std::string altForm;
-            getline(inFS, altForm, ',');
-            this->string_cleaning(altForm);
+            this->get_info(line, altForm);
+            newPokemon.set_altForm(altForm);
 
-            std::string orgID;
-            getline(inFS, orgID, ',');
+            /** Original ID **/
+            std::string orgID = line.substr(0, line.find(','));
+            line.erase(0, orgID.size() + 1);
 
-            std::string legend;
-            getline(inFS, legend, ',');
+            /** Legendary Status **/
+            std::string legend = line.substr(0, line.find(','));
+            line.erase(0, legend.size() + 1);
+            if (legend != "NULL") {
+                newPokemon.set_legend();
+            }
 
-            std::string height;
-            getline(inFS, height, ',');
-            std::string weight;
-            getline(inFS, weight, ',');
+            /** Height **/
+            std::string height = line.substr(0, line.find(','));
+            line.erase(0, height.size() + 1);
+            newPokemon.set_height(std::stod(height));
 
-            // element type
+            /** Weight **/
+            std::string weight = line.substr(0, line.find(','));
+            line.erase(0, weight.size() + 1);
+            newPokemon.set_height(std::stod(weight));
+
+            /** Primary type **/
             std::string primary;
-            getline(inFS, primary, ',');
-            this->string_cleaning(primary);
+            this->get_info(line, primary);
+
+            /** Secondary Type **/
             std::string secondary;
-            getline(inFS, secondary, ',');
-            this->string_cleaning(secondary);
+            this->get_info(line, secondary);
+            newPokemon.set_types(primary, secondary);
 
-            // abilities
+            /** Abilities **/
+            std::vector<std::string> abilities;
+
+            /** Primary Ability and Description **/
             std::string primAbility;
-            getline(inFS, primAbility, ',');
-            this->string_cleaning(primAbility);
-
             std::string primDescript;
-            getline(inFS, primDescript, ',');
-            this->string_cleaning(primDescript);
+            this->get_ability(line, primAbility, primDescript);
+            abilities.push_back(primAbility);
 
+            /** Secondary Ability and Description **/
             std::string secAbility;
-            getline(inFS, secAbility, ',');
-            this->string_cleaning(secAbility);
             std::string secDescript;
-            getline(inFS, secDescript, ',');
-            this->string_cleaning(secDescript);
+            this->get_ability(line, secAbility, secDescript);
+            abilities.push_back(secAbility);
 
+            /** Hidden Ability and Description **/
             std::string hidAbility;
-            getline(inFS, hidAbility, ',');
-            this->string_cleaning(hidAbility);
             std::string hidDescript;
-            getline(inFS, hidDescript, ',');
-            this->string_cleaning(hidDescript);
+            this->get_ability(line, hidAbility, hidDescript);
+            abilities.push_back(hidAbility);
 
+            /** Special Event Ability and Description **/
             std::string specAbility;
-            getline(inFS, specAbility, ',');
-            this->string_cleaning(specAbility);
             std::string specDescript;
-            getline(inFS, specDescript, ',');
-            this->string_cleaning(specDescript);
+            this->get_ability(line, specAbility, specDescript);
+            abilities.push_back(specAbility);
 
-            // gender
-            std::string maleRatio;
-            getline(inFS, maleRatio, ',');
-            std::string femRatio;
-            getline(inFS, femRatio, ',');
+            newPokemon.set_abilities(abilities);
 
-            std::string baseHappy;
-            getline(inFS, baseHappy, ',');
+            /** Gender Ratio **/
+            std::string maleRatio = line.substr(0, line.find(','));
+            line.erase(0, maleRatio.size() + 1);
+
+            std::string femRatio = line.substr(0, line.find(','));
+            line.erase(0, femRatio.size() + 1);
+            newPokemon.set_gender_ratios(std::stod(maleRatio), std::stod(femRatio));
+
+            /** Happiness Base **/
+            std::string baseHappy = line.substr(0, line.find(','));
+            line.erase(0, baseHappy.size() + 1);
+            newPokemon.set_happiness_base(std::stoi(baseHappy));
+
+            /** Origin Game **/
             std::string orgGame;
-            getline(inFS, orgGame, ',');
-            this->string_cleaning(orgGame);
+            this->get_info(line, orgGame);
 
-            // stats
-            std::vector<std::string> stats;
+            /** Normal Stats **/
+            std::vector<int> stats;
             std::string stat;
             for (int i = 0; i < 7; i++) {
-                getline(inFS, stat, ',');
-                stats.push_back(stat);
+                stat = line.substr(0, line.find(','));
+                line.erase(0, stat.size() + 1);
+                stats.push_back(std::stoi(stat));
             }
+            newPokemon.set_normal_stats(stats);
 
-            // EV stats
-            std::vector<std::string> evStats;
+            /** EV Stats **/
+            std::vector<int> evStats;
             std::string evStat;
             for (int i = 0; i < 7; i++) {
-                getline(inFS, evStat, ',');
-                evStats.push_back(evStat);
+                evStat = line.substr(0, line.find(','));
+                line.erase(0, evStat.size() + 1);
+                evStats.push_back(std::stoi(evStat));
             }
+            newPokemon.set_EV_stats(evStats);
 
-            std::string catchRate;
-            getline(inFS, catchRate, ',');
+            /** Catch Rate **/
+            std::string catchRate = line.substr(0, line.find(','));
+            line.erase(0, catchRate.size() + 1);
+            newPokemon.set_catch_rate(std::stoi(catchRate));
 
+            /** Growth Rate **/
             std::string expGrowth;
-            getline(inFS, expGrowth, ',');
-            this->string_cleaning(expGrowth);
+            this->get_info(line, expGrowth);
+
+            /** Total Experience **/
             std::string expGrowthTotal;
-            getline(inFS, expGrowthTotal, ',');
+            this->get_info(line, expGrowthTotal);
+            newPokemon.set_experience(expGrowth, std::stoi(expGrowthTotal));
 
-            // egg numbers
+            /** Primary Egg Group **/
             std::string primEggGroup;
-            getline(inFS, primEggGroup, ',');
-            this->string_cleaning(primEggGroup);
-            std::string secEggGroup;
-            getline(inFS, secEggGroup, ',');
-            this->string_cleaning(secEggGroup);
-            std::string eggCycleCount;
-            getline(inFS, eggCycleCount, ',');
+            this->get_info(line, primEggGroup);
 
-            // evolution
-            std::string prevEvlID;
-            getline(inFS, prevEvlID, ',');
-            std::string evlvl;
-            getline(inFS, evlvl, ',');
+            /** Secondary Egg Group **/
+            std::string secEggGroup;
+            this->get_info(line, secEggGroup);
+
+            /** Egg Cycle Count **/
+            std::string eggCycleCount = line.substr(0, line.find(','));
+            line.erase(0, eggCycleCount.size() + 1);
+            newPokemon.set_egg_info(primEggGroup, secEggGroup, std::stoi(eggCycleCount));
+
+            /** Previous Evolution ID **/
+            std::string prevEvlID = line.substr(0, line.find(','));
+            line.erase(0, prevEvlID.size() + 1);
+
+            /** Evolution Level **/
+            std::string evlvl = line.substr(0, line.find('\r'));
+            line.erase(0, evlvl.size() + 1);
             this->string_cleaning(evlvl);
+
+            this->pokemonList.push_back(newPokemon);
         }
     } else {
         std::cout << "File is not open!" << std::endl;
     }
+
+    std::cout << this->pokemonList.size() << std::endl;
 }
 
 void Pokedex::string_cleaning(std::string& str) {
@@ -152,4 +195,45 @@ void Pokedex::string_cleaning(std::string& str) {
             str.erase(str.begin() + i);
         }
     }
+}
+
+void Pokedex::line_string(std::string& line) {
+    int counter = 0;
+
+    for (int i = 0; i < line.size(); i++) {
+        if (line[i] == '\"'  && counter < 2) {
+            line.erase(line.begin() + i);
+            counter++;
+        }
+
+        if (counter >= 2) {
+            counter = 0;
+        }
+    }
+}
+
+void Pokedex::get_info(std::string& line, std::string& str) {
+    str = line.substr(0, line.find(','));
+    line.erase(0, str.size() + 1);
+    this->string_cleaning(str);
+}
+
+void Pokedex::get_ability(std::string& line, std::string& ability, std::string& description) {
+    if (line.substr(0,4) != "NULL") {
+        line.erase(0,1);
+        ability = line.substr(0, line.find('\"'));
+        line.erase(0, ability.size() + 3);
+
+        description = line.substr(0, line.find('\"'));
+        line.erase(0, description.size() + 2);
+    } else {
+        ability = line.substr(0, line.find(','));
+        line.erase(0, ability.size() + 1);
+
+        description = line.substr(0, line.find(','));
+        line.erase(0, description.size() + 1);
+    }
+
+    this->string_cleaning(ability);
+    this->string_cleaning(description);
 }
