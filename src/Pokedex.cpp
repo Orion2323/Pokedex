@@ -85,7 +85,6 @@ void Pokedex::read_dataset() {
             std::string primAbility;
             std::string primDescript;
             this->get_ability(line, primAbility, primDescript);
-            abilities.push_back(primAbility);
 
             if (!this->abilityMap.count(primAbility)) {
                 this->abilityMap.insert({primAbility, primDescript});
@@ -95,7 +94,6 @@ void Pokedex::read_dataset() {
             std::string secAbility;
             std::string secDescript;
             this->get_ability(line, secAbility, secDescript);
-            abilities.push_back(secAbility);
 
             if (!this->abilityMap.count(secAbility) && secAbility != "NULL") {
                 this->abilityMap.insert({secAbility, secDescript});
@@ -105,7 +103,6 @@ void Pokedex::read_dataset() {
             std::string hidAbility;
             std::string hidDescript;
             this->get_ability(line, hidAbility, hidDescript);
-            abilities.push_back(hidAbility);
 
             if (!this->abilityMap.count(hidAbility) && hidAbility != "NULL") {
                 this->abilityMap.insert({hidAbility, hidDescript});
@@ -115,7 +112,6 @@ void Pokedex::read_dataset() {
             std::string specAbility;
             std::string specDescript;
             this->get_ability(line, specAbility, specDescript);
-            abilities.push_back(specAbility);
 
             if (!this->abilityMap.count(specAbility) && specAbility != "NULL") {
                 this->abilityMap.insert({specAbility, specDescript});
