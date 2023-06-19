@@ -67,7 +67,7 @@ void Pokedex::read_dataset() {
             /** Weight **/
             std::string weight = line.substr(0, line.find(','));
             line.erase(0, weight.size() + 1);
-            newPokemon.set_height(std::stod(weight));
+            newPokemon.set_weight(std::stod(weight));
 
             /** Primary type **/
             std::string primary;
@@ -192,7 +192,8 @@ void Pokedex::read_dataset() {
             line.erase(0, evlvl.size() + 1);
             this->string_cleaning(evlvl);
 
-            this->pokemonList.push_back(newPokemon);
+            //this->pokemonList.push_back(newPokemon);
+            this->pokemonMap.insert({newPokemon.get_name(), newPokemon});
         }
     } else {
         std::cout << "File is not open!" << std::endl;
@@ -253,4 +254,12 @@ void Pokedex::get_ability(std::string& line, std::string& ability, std::string& 
 
     this->string_cleaning(ability);
     this->string_cleaning(description);
+}
+
+void Pokedex::search_pokemon(std::string& pokemon) {
+    if (this->pokemonMap.count(pokemon)) {
+        std::cout << this->pokemonMap[pokemon] << std::endl;
+    } else {
+        std::cout << "Pokemon not found!\n" << std::endl;
+    }
 }

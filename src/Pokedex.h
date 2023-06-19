@@ -12,6 +12,7 @@ private:
     char* datapath;
 
     std::vector<Pokemon> pokemonList;
+    std::map<std::string, Pokemon> pokemonMap;
     std::map<std::string,std::string> abilityMap;
 
 public:
@@ -67,6 +68,8 @@ public:
      * @param description
      * @param pokemon
      */
+
+    void search_pokemon(std::string& pokemon);
 };
 
 #endif //POKEDEX_PROJECT_POKEDEX_H
