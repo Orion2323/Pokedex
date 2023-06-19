@@ -15,8 +15,36 @@ Pokemon::Pokemon() {
     this->eggCycleCount = 0;
 }
 
+bool Pokemon::operator==(const Pokemon& pokemon) {
+    return (strcmp(this->name.c_str(), pokemon.name.c_str()) == 0);
+}
+
+bool Pokemon::operator==(const std::string& pokemon) {
+    return (strcmp(this->name.c_str(), pokemon.c_str()) == 0);
+}
+
+bool Pokemon::operator<(const Pokemon& pokemon) {
+    return (strcmp(this->name.c_str(), pokemon.name.c_str()) < 0);
+}
+
+bool Pokemon::operator<(const std::string& pokemon) {
+    return (strcmp(this->name.c_str(), pokemon.c_str()) < 0);
+}
+
+bool Pokemon::operator>(const Pokemon& pokemon) {
+    return (strcmp(this->name.c_str(), pokemon.name.c_str()) > 0);
+}
+
+bool Pokemon::operator>(const std::string& pokemon) {
+    return (strcmp(this->name.c_str(), pokemon.c_str()) > 0);
+}
+
 void Pokemon::set_name(const std::string& name) {
     this->name = name;
+}
+
+std::string& Pokemon::get_name() {
+    return this->name;
 }
 
 void Pokemon::set_classification(const std::string& classification) {
@@ -86,4 +114,13 @@ void Pokemon::set_egg_info(const std::string& primaryEgg, const std::string& sec
 
 void Pokemon::set_evol_level(const std::string& evlLevel) {
     this->evoLevel = evlLevel;
+}
+
+std::ostream& operator<<(std::ostream& inOS, const Pokemon& pokemon) {
+    inOS << std::endl;
+    inOS << "Name: " << pokemon.name << std::endl;
+    inOS << "Classification: " << pokemon.classification << std::endl;
+
+    inOS << "Height: " << std::right << std::setw(5) <<  pokemon.height << std::endl;
+    inOS << "Weight: " << std::right << std::setw(5) << pokemon.weight << std::endl;
 }

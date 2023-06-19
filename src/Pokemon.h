@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <vector>
+#include <cstring>
+#include <fstream>
+#include <iomanip>
 
 class Pokemon {
 private:
@@ -47,12 +50,49 @@ private:
 public:
     explicit Pokemon();
 
+    /** Overloaded equality operator
+     * Method that determines whether the passed variable and the Pokemon
+     * object are the same
+     *
+     * @param pokemon variable to be compared
+     * @return boolean that returns whether variables are the same
+     */
+    bool operator==(const Pokemon& pokemon);
+    bool operator==(const std::string& pokemon);
+
+    /** Overloaded less than operator
+     * Method that determines whether the passed variable is less than
+     * the Pokemon object
+     *
+     * @param pokemon variable to be compared
+     * @return boolean that returns whether passed in variable is less than the Pokemon variable
+     */
+    bool operator<(const Pokemon& pokemon);
+    bool operator<(const std::string& pokemon);
+
+    /** Overloaded greater than operator
+     * Method that determines whether the passed variable is greater than
+     * the Pokemon object
+     *
+     * @param pokemon variable to be compared
+     * @return boolean that returns whether passed in variable is greater than the Pokemon variable
+     */
+    bool operator>(const Pokemon& pokemon);
+    bool operator>(const std::string& pokemon);
+
     /** set_name method
      * Sets name of Pokemon
      *
      * @param name
      */
     void set_name(const std::string& name);
+
+    /** get_name method
+     * Returns name of Pokemon
+     *
+     * @return string that holds name of Pokemon
+     */
+    std::string& get_name();
 
     /** set_classification method
      * Sets classification type of Pokemon
@@ -163,6 +203,8 @@ public:
      * @param evlLevel
      */
     void set_evol_level(const std::string& evlLevel);
+
+    friend std::ostream& operator<<(std::ostream& inOS, const Pokemon& pokemon);
 };
 
 #endif //POKEDEX_PROJECT_POKEMON_H
