@@ -59,6 +59,14 @@ public:
      * @param str
      */
     void get_info(std::string& line, std::string& str);
+
+    /** add_ability
+     * Adds or updates ability in Ability set of Pokedex
+     *
+     * @param ability
+     * @param description
+     * @param pokemon
+     */
 };
 
 #endif //POKEDEX_PROJECT_POKEDEX_H
